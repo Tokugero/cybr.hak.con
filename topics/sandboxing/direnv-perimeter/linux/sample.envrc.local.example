@@ -1,0 +1,25 @@
+# sample.envrc.local.example — copy to .envrc.local (gitignored) and fill in.
+#
+# .envrc.local holds machine-specific secrets that shouldn't be committed.
+# The committed `.envrc` sources this file via `dotenv_if_exists .envrc.local`.
+# That way the perimeter's *shape* is committed, but the *values* stay local.
+#
+# Make sure your repo's .gitignore has `.envrc.local` in it. Otherwise
+# the file ends up in version control by accident.
+#
+# Common contents (uncomment and fill in for your work):
+
+# Long-lived tokens (consider patterns 2-4 in ../patterns.md instead)
+# ANTHROPIC_API_KEY=sk-ant-...
+# OPENAI_API_KEY=sk-...
+# GITHUB_TOKEN=ghp_...                     # PAT scoped to this engagement only
+
+# Profile selectors (the actual creds live in ~/.aws/config or a vault)
+# AWS_PROFILE=engagement-x-readonly
+
+# Local paths
+# KUBECONFIG=$HOME/.kube/engagement-x.yaml
+
+# Wrapper aliases (preferred over baking creds in plaintext)
+# alias aws='aws-vault exec engagement-x -- aws'
+# alias terraform='aws-vault exec engagement-x -- terraform'
