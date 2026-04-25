@@ -1,0 +1,52 @@
+# docker-compose stack for the network-egress workshop.
+#
+# Two services:
+#   gluetun — the VPN sidecar. Owns the network namespace.
+#   worker  — the workshop image (curl, dig, nc baked in). Joins
+#             gluetun's namespace via network_mode, so the worker has
+#             whatever connectivity gluetun has (and only that).
+#
+# Without VPN credentials in .env, gluetun fails to authenticate but
+# its firewall rules are still in place — meaning the worker has no
+# usable network. That fail-closed behavior is the workshop's main
+# demonstration. With credentials, the worker's traffic exits via
+# the VPN provider. See workshop.md for the full flow.
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      VPN_SERVICE_PROVIDER: ${VPN_SERVICE_PROVIDER:-mullvad}
+      VPN_TYPE: ${VPN_TYPE:-wireguard}
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY:-}
+      WIREGUARD_ADDRESSES: ${WIREGUARD_ADDRESSES:-}
+      SERVER_COUNTRIES: ${SERVER_COUNTRIES:-Sweden}
+      # Block IPv6 by default to avoid leaks past the tunnel
+      IPV6: "off"
+    restart: unless-stopped
+    # Health check probes whether the tunnel is up; without creds this
+    # will keep failing, which is exactly what the fail-closed demo
+    # shows. The worker doesn't depend on this passing.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --timeout=3 https://api.ipify.org || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cybr-hak-con-egress:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    # Mount the sandboxing/ tree at /workshop so the egress probe (and
+    # cred-scrub probe, if you compose with it) are reachable.
+    volumes:
+      - ../../:/workshop:ro
+    command: ["sleep", "infinity"]
