@@ -1,0 +1,27 @@
+# Tool requirements by topic
+
+What you need to work through each topic. Everything listed is free and popular; nothing requires a paid account.
+
+## By topic
+
+| Topic | Required tools | Notes |
+|-------|----------------|-------|
+| [`topics/sandboxing/cred-scrub/`](topics/sandboxing/cred-scrub/) | shell (`bash`/`zsh` on Mac/Linux/WSL, PowerShell 7+ on Windows), `direnv` | Test harness uses plain shell — no test framework |
+| [`topics/sandboxing/direnv-perimeter/`](topics/sandboxing/direnv-perimeter/) | shell, `direnv` | Builds on cred-scrub; same prerequisites |
+| [`topics/sandboxing/container-isolation/`](topics/sandboxing/container-isolation/) | shell, `docker` | Mac/Windows: Docker Desktop runs containers in a Linux VM, which is itself a teachable point in this topic |
+
+## Install pointers
+
+- **shell** — bash and zsh ship with Mac/Linux/WSL by default. PowerShell 7+ on Windows: `winget install Microsoft.PowerShell` or download from Microsoft.
+- **direnv** — https://direnv.net/docs/installation.html. Available via every major package manager (`brew install direnv`, `apt install direnv`, `pacman -S direnv`, `scoop install direnv`, `nix-env -iA nixpkgs.direnv`).
+- **Docker** — https://docs.docker.com/get-docker/. Docker Desktop on Mac/Windows; native on Linux. On Linux you may need to add yourself to the `docker` group, or run rootless — see your distribution's docs. The image used by the workshop is `ubuntu:24.04` (~30MB, pulled on first run).
+
+## What you can run with what you have
+
+| You have... | Topics |
+|-------------|--------|
+| just a shell | (none yet — `direnv` is the floor for the sandboxing track) |
+| shell + `direnv` | cred-scrub, direnv-perimeter |
+| shell + `direnv` + Docker | cred-scrub, direnv-perimeter, container-isolation |
+
+This file grows as new topics are added. If you want to know what additional tools a planned future topic will require, look at the topic's `README.md` once it exists.
