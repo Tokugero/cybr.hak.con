@@ -48,6 +48,7 @@ Pick the lowest tier where the worst plausible outcome is acceptable. That's the
 |-------|---------|--------------|--------|
 | [`cred-scrub/`](cred-scrub/) | 0 | S1 (accidental exposure form) | Workshop |
 | [`direnv-perimeter/`](direnv-perimeter/) | 0 | S1, S3 | Workshop (builds on cred-scrub) |
+| [`process-isolation/`](process-isolation/) | 1 | S1, S3 | Workshop (Linux: bubblewrap) |
 | [`container-isolation/`](container-isolation/) | 2 | S1, S2, S3 | Workshop (composes with Tier 0) |
 | [`network-egress/`](network-egress/) | 2 (network axis) | S1 (exfil path) | Workshop (composes with container-isolation) |
 
