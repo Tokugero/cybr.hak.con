@@ -1,0 +1,9 @@
+docs/
+
+# Local Claude Code state — entrenched in the maintainer's environment,
+# not relevant to participants
+.claude/
+
+# Test harness output
+**/.baseline.txt
+**/.scrubbed.txt
