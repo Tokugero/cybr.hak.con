@@ -51,5 +51,6 @@ Pick the lowest tier where the worst plausible outcome is acceptable. That's the
 | [`process-isolation/`](process-isolation/) | 1 | S1, S3 | Workshop (Linux: bubblewrap) |
 | [`container-isolation/`](container-isolation/) | 2 | S1, S2, S3 | Workshop (composes with Tier 0) |
 | [`network-egress/`](network-egress/) | 2 (network axis) | S1 (exfil path) | Workshop (composes with container-isolation) |
+| [`composition/`](composition/) | synthesis | all | Workshop (stacking all of the above) |
 
 More topics will appear here over time.
