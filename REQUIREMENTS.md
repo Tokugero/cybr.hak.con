@@ -10,6 +10,9 @@ What you need to work through each topic. Everything listed is free and popular;
 | [`topics/sandboxing/direnv-perimeter/`](topics/sandboxing/direnv-perimeter/) | shell, `direnv` | Builds on cred-scrub; same prerequisites |
 | [`topics/sandboxing/process-isolation/`](topics/sandboxing/process-isolation/) | shell, `bubblewrap` (Linux) | Linux-only first pass; Mac uses `sandbox-exec`, Windows uses WSL or AppContainer |
 | [`topics/sandboxing/container-isolation/`](topics/sandboxing/container-isolation/) | shell, `docker` | Mac/Windows: Docker Desktop runs containers in a Linux VM, which is itself a teachable point in this topic |
+| [`topics/sandboxing/network-egress/`](topics/sandboxing/network-egress/) | shell, `docker`, `docker compose` v2 | Workshop body works without a VPN subscription (fail-closed demo); going-further uses gluetun + a paid VPN provider |
+| [`topics/sandboxing/vm-isolation/`](topics/sandboxing/vm-isolation/) | shell, `qemu`, `cloud-utils`, KVM (Linux) | First run downloads ~600MB Ubuntu cloud image, cached |
+| [`topics/sandboxing/composition/`](topics/sandboxing/composition/) | depends on which composition you run | Stacks cred-scrub + direnv-perimeter + one of process / container / network / vm |
 
 ## Install pointers
 
