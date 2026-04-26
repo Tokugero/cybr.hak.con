@@ -17,6 +17,7 @@ What you need to work through each topic. Everything listed is free and popular;
 - **direnv** — https://direnv.net/docs/installation.html. Available via every major package manager (`brew install direnv`, `apt install direnv`, `pacman -S direnv`, `scoop install direnv`, `nix-env -iA nixpkgs.direnv`).
 - **bubblewrap** — Linux only. `apt install bubblewrap`, `pacman -S bubblewrap`, `dnf install bubblewrap`, or `nix shell nixpkgs#bubblewrap`. Requires user namespaces enabled in the kernel (the default on most distros).
 - **Docker** — https://docs.docker.com/get-docker/. Docker Desktop on Mac/Windows; native on Linux. On Linux you may need to add yourself to the `docker` group, or run rootless — see your distribution's docs. The image used by the workshop is `ubuntu:24.04` (~30MB, pulled on first run).
+- **qemu + cloud-utils** (Linux) — `apt install qemu-system-x86 cloud-image-utils`, `pacman -S qemu cloud-image-utils`, or equivalent. KVM acceleration requires `/dev/kvm` access (typically: add yourself to the `kvm` group). Used by the vm-isolation topic; first run downloads ~600MB Ubuntu cloud image, cached.
 
 ## What you can run with what you have
 
@@ -26,5 +27,7 @@ What you need to work through each topic. Everything listed is free and popular;
 | shell + `direnv` | cred-scrub, direnv-perimeter |
 | shell + `direnv` + `bubblewrap` (Linux) | + process-isolation |
 | shell + `direnv` + Docker | + container-isolation, network-egress |
+| shell + `direnv` + qemu + KVM (Linux) | + vm-isolation |
+| any combination of the above | composition (uses whatever Tier 1+ layer you have) |
 
 This file grows as new topics are added. If you want to know what additional tools a planned future topic will require, look at the topic's `README.md` once it exists.
