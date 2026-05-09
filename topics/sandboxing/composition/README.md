@@ -37,9 +37,10 @@ This workshop assumes the vocabulary, the probes, and the patterns from those to
 
 ## What you need
 
-- All the dependencies of the topics above. See `../../REQUIREMENTS.md`.
+- All the dependencies of the topics above. See `../../../REQUIREMENTS.md`.
 - For the bwrap composition: `bubblewrap` (Linux only).
 - For the Docker compositions: `docker` and `docker compose` v2.
+- Mac and Windows participants: see `OTHER-PLATFORMS.md`.
 
 ## Time
 
@@ -52,7 +53,7 @@ This workshop assumes the vocabulary, the probes, and the patterns from those to
 README.md                    — this file
 workshop.md                  — the exercise: three example compositions + the threat-coverage matrix
 discussion.md                — questions to ask your LLM
-PORTING.md                   — handoff doc for Mac and Windows
+OTHER-PLATFORMS.md           — pointers for translating linux/ to Mac or Windows
 linux/
   compose-bwrap.sh           — Tier 0 + Tier 1 (bubblewrap) example
   compose-docker.sh          — Tier 0 + Tier 2 (hardened Docker) example
@@ -61,4 +62,4 @@ linux/
   tests/run.sh               — verifies each composition produces the expected probe output
 ```
 
-WSL users follow the Linux folder. Mac and Windows aren't built — see `PORTING.md`.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

@@ -18,10 +18,10 @@ For the full threat model and tier vocabulary, see `../README.md`.
 
 ## What you need
 
-- A shell: `bash` or `zsh` on Mac/Linux/WSL, or PowerShell 7+ on Windows.
+- A Linux host (or WSL 2). Mac and Windows participants: see `OTHER-PLATFORMS.md` and ask your agent to translate.
 - `direnv`. [Installation](https://direnv.net/docs/installation.html). Free, popular, in every major package manager.
 
-The test harness is a plain shell script (bash on Mac/Linux, PowerShell on Windows) — no extra dependency.
+The test harness is a plain bash script — no extra dependency.
 
 ## Time
 
@@ -33,13 +33,12 @@ The workshop is drop-in/drop-out. Stop wherever; come back later.
 ## Layout
 
 ```
-README.md          — this file
-workshop.md        — the exercise
-categories.md      — what credentials we cover (cross-platform reference, with Layer 1 vs Layer 2)
-discussion.md      — questions to ask your LLM after the workshop
-linux/             — Linux probe, scrubber, tests, notes
-mac/               — Mac probe, scrubber, tests, notes
-windows/           — Windows probe, scrubber, tests, notes
+README.md             — this file
+workshop.md           — the exercise
+categories.md         — what credentials we cover (cross-platform reference, with Layer 1 vs Layer 2)
+discussion.md         — questions to ask your LLM after the workshop
+OTHER-PLATFORMS.md    — pointers for translating linux/ to Mac or Windows
+linux/                — Linux probe, scrubber, tests, notes
 ```
 
-Pick your platform's folder when the workshop tells you to. WSL users follow the Linux folder.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

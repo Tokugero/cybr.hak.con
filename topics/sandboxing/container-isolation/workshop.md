@@ -2,7 +2,7 @@
 
 A hands-on exercise. You'll run two probes — the cred-scrub probe you already know, plus a new container-shape probe — both on the host and inside two different containers, and watch what changes.
 
-Substitute `<repo>` for the path to your clone. Linux paths only for now; Mac and Windows are pending in `PORTING.md`.
+Substitute `<repo>` for the path to your clone. All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
 
 ## 1. What a container actually is
 

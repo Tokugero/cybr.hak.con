@@ -2,6 +2,8 @@
 
 Three runner scripts, three different stackings, one matrix showing what each addresses.
 
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
+
 ## 1. The starting point — Tier 0 is always the base
 
 Whatever you compose above it, **the host shell that launches the sandboxed process should already have the cred-scrub + direnv-perimeter setup applied**. That means:

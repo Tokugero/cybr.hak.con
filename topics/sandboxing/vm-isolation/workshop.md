@@ -2,6 +2,8 @@
 
 Hands-on. You'll boot a fresh Ubuntu VM, run the cred-scrub probe and container-shape probe inside it, observe the kernel difference, then shut it down. The whole cycle takes ~60-90 seconds after the first-run image download.
 
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
+
 ## 1. What a VM actually isolates
 
 A VM, run by a hypervisor (KVM here, via QEMU), has:

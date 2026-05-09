@@ -2,18 +2,14 @@
 
 A hands-on exercise. Run the probe, look at the scrubber, watch the diff. The diff is the lesson.
 
-Substitute your platform (`linux/`, `mac/`, `windows/`) wherever you see `<platform>` below.
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
 
 ## 1. See what your shell exposes right now
 
-From this directory, run the probe for your platform:
+From this directory, run the probe:
 
 ```sh
-bash <platform>/probe.sh        # Mac, Linux, WSL
-```
-
-```powershell
-pwsh <platform>/probe.ps1       # Windows
+bash linux/probe.sh
 ```
 
 The probe walks credential categories (cloud, infrastructure, source control, LLM keys, agents, OS keystores, default-path redirects) and prints a fixed-width report showing what's reachable in your current shell.
@@ -42,12 +38,7 @@ This is what an agent running in your shell sees. Save the output — we'll diff
 
 ## 2. Look at the scrubber
 
-Open the scrubber for your platform:
-
-- `<platform>/solution.envrc` (Mac, Linux, WSL)
-- `<platform>/solution.profile.ps1` (Windows)
-
-It has **two layers**:
+Open `linux/solution.envrc`. It has **two layers**:
 
 **Layer 1 — unset credential values.** A list of `unset` (or `Remove-Item Env:`) calls grouped by category: cloud, infrastructure, source control, LLM keys, package registries, secrets managers, hosting/CDN, SSH agent. This removes any credentials currently exported into your shell.
 
@@ -55,7 +46,7 @@ It has **two layers**:
 
 Why both layers matter: unsetting `KUBE_TOKEN` doesn't stop `kubectl` from reading `~/.kube/config`. Unsetting `AWS_PROFILE` doesn't stop `aws` from reading `~/.aws/credentials`. Layer 2 is what closes that gap.
 
-Read your platform's `<platform>/notes.md` for platform-specific gotchas (Keychain on Mac, GNOME Keyring/KWallet/`pass` on Linux, Credential Manager and DPAPI on Windows).
+Read `linux/notes.md` for Linux-specific gotchas (GNOME Keyring/KWallet/`pass`). The OS-keystore equivalents on Mac (Keychain) and Windows (Credential Manager / DPAPI) sit next to credentials but aren't scrubbed by this workshop — see `OTHER-PLATFORMS.md` for the framing.
 
 ## 3. Apply the scrubber to a directory
 
@@ -63,7 +54,7 @@ Pick a fresh empty directory anywhere outside this repo:
 
 ```sh
 mkdir -p ~/sandbox-test
-cp <platform>/solution.envrc ~/sandbox-test/.envrc
+cp linux/solution.envrc ~/sandbox-test/.envrc
 cd ~/sandbox-test
 direnv allow
 ```
@@ -72,12 +63,12 @@ direnv allow
 
 When direnv loads, it should print a status banner from the scrubber.
 
-If you don't have direnv hooked into your shell yet, see your platform's `notes.md` for the one-time install step. Without the hook, `.envrc` doesn't fire on `cd` and the workshop loses its point.
+If you don't have direnv hooked into your shell yet, see `linux/notes.md` for the one-time install step. Without the hook, `.envrc` doesn't fire on `cd` and the workshop loses its point.
 
 ## 4. Re-probe in the scrubbed directory
 
 ```sh
-bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh
+bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh
 ```
 
 Compare against step 1. You should see:
@@ -124,11 +115,11 @@ To test the perimeter honestly, the order matters:
 3. `cd` into your scrubbed directory. Direnv fires. You see the status banner.
 4. Verify the scrub took effect:
    ```sh
-   bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh
+   bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh
    ```
 5. **Now** launch your LLM: `claude`, `opencode`, or whatever you use.
 6. Ask the LLM to run the probe:
-   > Run `bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh` and show me the output.
+   > Run `bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh` and show me the output.
 
 The LLM's probe output should match the shell's. The LLM is a child process of the scrubbed shell; its environment is the scrubbed environment.
 
@@ -139,8 +130,8 @@ A subtle thing worth checking: being *inside* a directory with a scrubbed `.envr
 The cheapest way to confirm: ask the LLM to run the probe two ways, from inside the perimeter directory:
 
 ```sh
-bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh
-direnv exec . bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh
+bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh
+direnv exec . bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh
 ```
 
 The first runs the probe in whatever environment the LLM launched with. The second uses `direnv exec`, which forces the `.envrc` to apply regardless of how the LLM was launched.
@@ -156,7 +147,7 @@ That diff is the fastest way to know the truth about your session.
 
 If your LLM has a subagent or task tool (Claude Code's Agent / Task, opencode's equivalents), ask it to spawn one:
 
-> Spawn a subagent and ask it to run `bash <repo>/topics/sandboxing/cred-scrub/<platform>/probe.sh`. Show me its output.
+> Spawn a subagent and ask it to run `bash <repo>/topics/sandboxing/cred-scrub/linux/probe.sh`. Show me its output.
 
 The subagent's output should match too. Subagents are child processes of the LLM. They inherit the LLM's environment, which is the scrubbed environment.
 
@@ -183,11 +174,7 @@ These are the things to probe in subsequent topics. For now: the default behavio
 To verify the scrubber against a known-seeded environment instead of your real one:
 
 ```sh
-bash <platform>/tests/run.sh
-```
-
-```powershell
-pwsh <platform>/tests/run.ps1
+bash linux/tests/run.sh
 ```
 
 This:

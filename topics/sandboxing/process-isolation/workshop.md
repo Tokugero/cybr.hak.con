@@ -2,6 +2,8 @@
 
 Hands-on. You'll wrap the cred-scrub probe in two different `bwrap` invocations — one permissive, one hardened — and compare what each reveals about your home directory.
 
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
+
 ## 1. What `bwrap` actually does
 
 `bubblewrap` (`bwrap`) is a setuid-root utility that creates a new mount namespace, binds host paths into it according to your flags, optionally unshares other namespaces (`--unshare-pid`, `--unshare-net`, `--unshare-uts`, ...), drops most Linux capabilities by default, then `exec`s your command inside.

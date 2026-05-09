@@ -44,3 +44,11 @@ Questions for your LLM after the workshop.
 - "What's a sensible policy for when to nuke the cached VM image and overlay disk? Once a week? After every CTF? What does each cadence cost vs gain?"
 - "If I'm running multiple agent VMs concurrently (different ports, different overlays), what's the resource model? Can my laptop handle five at once?"
 - "How would I make this work on a server with no display, behind a corporate proxy, with a tightly-controlled outbound firewall?"
+
+## Translating to your platform
+
+The workshop ships a Linux qemu/KVM implementation. Mac and Windows participants: drive your agent through the port with these.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/launch-and-probe.sh` into `mac/launch-via-lima.sh`. Critical: Lima auto-mounts `$HOME` by default. Disable that — the entire isolation goal is defeated otherwise. Show me the Lima config that pins this off."
+- "On Windows, `OTHER-PLATFORMS.md` flags Windows Sandbox as the closest 'disposable VM' but Windows-guest only. If I want a Linux disposable VM on Windows that isn't WSL, what's the most honest path? Walk me through the trade-offs."
+- "After your Mac port exists, run the cred-scrub probe inside the Lima VM. The dotfile rows should read `clean` (no host home mount). If any of them read `present`, the auto-mount is back — trace where the config got overridden."

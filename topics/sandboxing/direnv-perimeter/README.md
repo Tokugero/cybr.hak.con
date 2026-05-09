@@ -23,7 +23,7 @@ This workshop **builds on** [`../cred-scrub/`](../cred-scrub/). Cred-scrub focus
 
 ## What you need
 
-- A shell: `bash` or `zsh` on Mac/Linux/WSL, or PowerShell 7+ on Windows.
+- A Linux host (or WSL 2). Mac and Windows participants: see `OTHER-PLATFORMS.md`.
 - `direnv`. [Installation](https://direnv.net/docs/installation.html). Free, in every major package manager.
 
 The test harness is a plain shell script — no extra dependency.
@@ -38,12 +38,12 @@ The workshop is drop-in/drop-out. Stop wherever; come back later.
 ## Layout
 
 ```
-README.md          — this file
-workshop.md        — the exercise
-patterns.md        — scoped credential injection patterns (reference, not runnable)
-discussion.md      — questions to ask your LLM after the workshop
-PORTING.md         — handoff doc for adding Mac and Windows
-linux/             — Linux fingerprint script, sample .envrc files, notes, tests
+README.md             — this file
+workshop.md           — the exercise
+patterns.md           — scoped credential injection patterns (reference, not runnable)
+discussion.md         — questions to ask your LLM after the workshop
+OTHER-PLATFORMS.md    — pointers for translating linux/ to Mac or Windows
+linux/                — Linux fingerprint script, sample .envrc files, notes, tests
 ```
 
-Pick your platform's folder when the workshop tells you to. **Mac and Windows aren't built yet** — see `PORTING.md` for the porting checklist. WSL users follow the Linux folder.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

@@ -22,8 +22,8 @@ If you haven't done container-isolation yet, that's the prerequisite. Then come 
 
 ## What you need
 
-- A shell (bash/zsh on Mac/Linux/WSL).
-- **Docker** (24+) with `docker compose` v2. See `../../REQUIREMENTS.md`.
+- A Linux host (or WSL 2). Mac and Windows participants: see `OTHER-PLATFORMS.md`.
+- **Docker** (24+) with `docker compose` v2. See `../../../REQUIREMENTS.md`.
 - An internet connection on first run, to pull `qmcgaw/gluetun:v3` and build the worker image.
 - *Optional, for the going-further section:* a paid VPN subscription that gluetun supports (Mullvad, ProtonVPN, NordVPN, etc.). The workshop body works without one; the subscription unlocks the "actually route through the VPN" demonstration.
 
@@ -38,7 +38,7 @@ If you haven't done container-isolation yet, that's the prerequisite. Then come 
 README.md            — this file
 workshop.md          — the exercise
 discussion.md        — questions to ask your LLM
-PORTING.md           — handoff doc for adding Mac and Windows
+OTHER-PLATFORMS.md   — pointers for translating linux/ to Mac or Windows
 linux/
   Dockerfile         — builds the worker image (curl, dig, nc baked in)
   docker-compose.yml — gluetun sidecar + worker stack
@@ -50,4 +50,4 @@ linux/
   tests/run.sh       — verifies fail-closed behavior without VPN credentials
 ```
 
-WSL users follow the Linux folder. Mac and Windows aren't built yet — see `PORTING.md`.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

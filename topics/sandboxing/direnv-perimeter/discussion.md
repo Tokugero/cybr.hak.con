@@ -37,3 +37,11 @@ Questions to hand to your LLM after the workshop. Open-ended on purpose.
 
 - "Read `topics/sandboxing/README.md`. The talk frames Tier 0 as composing with Tier 2 (containers) — the AssumeRole-plus-container pattern. Sketch how the directory perimeter and a Docker container would compose for a single engagement. What does each layer contribute?"
 - "If I'm running an agent inside a Tier 2 container, and the container has my home directory mounted, how much of the perimeter survives the boundary?"
+
+## Translating to your platform
+
+The workshop ships a Linux fingerprint script and sample `.envrc` files. Mac and Windows participants: drive your agent through the port with these.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/fingerprint.sh` into `<mac/fingerprint.sh | windows/fingerprint.ps1>`. The `.envrc` files are direct copies (direnv evaluates them in its own bash on every platform) — don't 'helpfully' rewrite them as PowerShell."
+- "What's the perimeter-detection check you would write incorrectly in PowerShell on first try? (Hint: PowerShell's null/empty distinction for `$env:DIRENV_DIR`.) Show me the right form."
+- "After your port exists, run the original bash fingerprint and the new PowerShell fingerprint inside the same `direnv allow`-ed directory. Do the perimeter rows agree? If not, where does the disagreement come from — direnv, the shell, or the script?"

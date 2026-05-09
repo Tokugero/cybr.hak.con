@@ -35,3 +35,11 @@ Questions to hand to your LLM after the workshop. Most of these ask you to *reas
 
 - "If I added a VM (Tier 3) to the composition, which row of the matrix changes? Be specific about what kernel-level attacker this addresses that the lower tiers don't."
 - "Compare the cost of Tier 0 + bwrap against Tier 0 + Docker against Tier 0 + Docker + VM. Where does the cost climb steeply, and where does it climb cheaply for a meaningful threat-model gain?"
+
+## Translating to your platform
+
+Composition doesn't introduce new mechanisms — it stacks the per-topic ports. Translate those first (each topic has its own `OTHER-PLATFORMS.md`), then come back here.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/compose-docker.sh` and `linux/compose-docker-egress.sh` into `<mac/*.sh | windows/*.ps1>`. The bwrap composition doesn't have a clean port — for Windows recommend WSL 2; for Mac a `sandbox-exec` variant is possible but a separate exercise."
+- "On Mac/Windows, Tier 2 implicitly gives Tier 3 because Docker Desktop runs containers in a Linux VM. Update the matrix in `workshop.md` for my platform: which row of 'Kernel attack surface' moves from open to closed, and what new trust boundary does that introduce?"
+- "After your ported runners exist, run each composition and verify the probe output matches the expected matrix row. If a row differs from the Linux original, is it a real platform difference (Docker Desktop's VM giving you a 'free' Tier 3) or a translation bug?"

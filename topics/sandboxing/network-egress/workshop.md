@@ -4,6 +4,8 @@ Hands-on. You'll run an egress probe in three places — your host shell, a defa
 
 The third case demonstrates fail-closed behavior even without VPN credentials, which is the workshop's main lesson. The "actually route through a VPN" part is optional and requires a paid subscription.
 
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
+
 ## 1. What we're doing and why
 
 Two ideas to internalize before running anything:

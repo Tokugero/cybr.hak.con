@@ -26,8 +26,8 @@ This topic **builds on** Tier 0 hygiene. Containers compose with cred-scrub and 
 
 ## What you need
 
-- A shell (bash/zsh on Mac/Linux/WSL).
-- **Docker** — see `../../REQUIREMENTS.md` for install pointers. Tested with Docker 24+ on Linux. Mac/Windows uses Docker Desktop.
+- A Linux host (or WSL 2). Mac and Windows participants: see `OTHER-PLATFORMS.md`.
+- **Docker** — see `../../../REQUIREMENTS.md` for install pointers. Tested with Docker 24+ on Linux.
 - An internet connection on first run, to pull `ubuntu:24.04` (~30MB).
 
 ## Time
@@ -41,7 +41,7 @@ This topic **builds on** Tier 0 hygiene. Containers compose with cred-scrub and 
 README.md                 — this file
 workshop.md               — the exercise
 discussion.md             — questions to ask your LLM after the workshop
-PORTING.md                — handoff doc for adding Mac and Windows
+OTHER-PLATFORMS.md        — pointers for translating linux/ to Mac or Windows
 linux/
   container-probe.sh      — reports container shape (uid, caps, ns, mounts)
   run-default.sh          — runs probes inside a default Docker container
@@ -50,4 +50,4 @@ linux/
   tests/run.sh            — verifies hardened > default on key dimensions
 ```
 
-WSL users follow the Linux folder. Mac and Windows aren't built yet — see `PORTING.md`.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

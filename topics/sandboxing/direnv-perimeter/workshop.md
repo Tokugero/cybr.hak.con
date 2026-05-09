@@ -2,7 +2,7 @@
 
 A hands-on exercise. You'll set up a directory perimeter, watch a fingerprint script confirm it's active, see how a nested `.envrc` overrides its parent, and learn the patterns for injecting *scoped* credentials instead of leaving your broad ones in scope.
 
-Substitute your platform (`linux/`, `mac/`, `windows/`) wherever you see `<platform>` below.
+All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
 
 ## 1. What direnv actually does
 
@@ -23,7 +23,7 @@ Two things to internalize:
 The fingerprint script reports whether direnv has loaded an `.envrc` for this shell, and what scoped values are set.
 
 ```sh
-bash <repo>/topics/sandboxing/direnv-perimeter/<platform>/fingerprint.sh
+bash <repo>/topics/sandboxing/direnv-perimeter/linux/fingerprint.sh
 ```
 
 You should see something like:
@@ -41,7 +41,7 @@ KUBECONFIG                     | unset    | -
 
 ## 3. Apply a sample perimeter
 
-The `<platform>/sample.envrc` file is a teaching example. It does two things:
+The `linux/sample.envrc` file is a teaching example. It does two things:
 
 - **Scrub** a small set of broad credentials (illustrative subset; cred-scrub does this comprehensively).
 - **Inject** a scoped persona: `AWS_PROFILE=engagement-test`, `KUBECONFIG=$PWD/.kubeconfig`, plus a sentinel `PERIMETER_ACTIVE=yes` so the fingerprint can spot us.
@@ -50,7 +50,7 @@ The values are placeholders. The real-world version of `AWS_PROFILE=engagement-t
 
 ```sh
 mkdir -p ~/perimeter-test
-cp <repo>/topics/sandboxing/direnv-perimeter/<platform>/sample.envrc ~/perimeter-test/.envrc
+cp <repo>/topics/sandboxing/direnv-perimeter/linux/sample.envrc ~/perimeter-test/.envrc
 cd ~/perimeter-test
 direnv allow
 ```
@@ -60,7 +60,7 @@ direnv allow
 ## 4. Re-run the fingerprint inside the perimeter
 
 ```sh
-bash <repo>/topics/sandboxing/direnv-perimeter/<platform>/fingerprint.sh
+bash <repo>/topics/sandboxing/direnv-perimeter/linux/fingerprint.sh
 ```
 
 Compare against step 2. You should now see:
@@ -82,7 +82,7 @@ Open `patterns.md`. It walks four patterns for *adding* narrowly-scoped credenti
 - Kubernetes scoped contexts via per-directory kubeconfigs.
 - Short-lived credentials from a secrets manager (Vault, sops, 1Password CLI).
 
-These are descriptions, not runnable steps. The `<platform>/sample.envrc.local.example` file shows the shape of the local-secrets pattern. None of the patterns require a paid account to read about; some require one to actually use.
+These are descriptions, not runnable steps. The `linux/sample.envrc.local.example` file shows the shape of the local-secrets pattern. None of the patterns require a paid account to read about; some require one to actually use.
 
 This is the half of Tier 0 cred-scrub doesn't cover. Removal alone leaves you unable to do legitimate work inside the perimeter. Scoped injection lets you do the work with the smallest set of credentials sufficient for the task.
 
@@ -105,10 +105,10 @@ Try it:
 
 ```sh
 mkdir -p ~/perimeter-test/nested
-cp <repo>/topics/sandboxing/direnv-perimeter/<platform>/nested/sample.envrc ~/perimeter-test/nested/.envrc
+cp <repo>/topics/sandboxing/direnv-perimeter/linux/nested/sample.envrc ~/perimeter-test/nested/.envrc
 cd ~/perimeter-test/nested
 direnv allow
-bash <repo>/topics/sandboxing/direnv-perimeter/<platform>/fingerprint.sh
+bash <repo>/topics/sandboxing/direnv-perimeter/linux/fingerprint.sh
 ```
 
 The fingerprint should show:
@@ -127,8 +127,8 @@ The lesson is twofold. First, layering works — a project-wide `.envrc` for sha
 This is the same recipe as cred-scrub Step 6. From inside the perimeter, ask your LLM to run two equivalent-looking commands:
 
 ```sh
-bash <repo>/topics/sandboxing/direnv-perimeter/<platform>/fingerprint.sh
-direnv exec . bash <repo>/topics/sandboxing/direnv-perimeter/<platform>/fingerprint.sh
+bash <repo>/topics/sandboxing/direnv-perimeter/linux/fingerprint.sh
+direnv exec . bash <repo>/topics/sandboxing/direnv-perimeter/linux/fingerprint.sh
 ```
 
 If the outputs match → the perimeter is applied. If they differ (only the second one shows `DIRENV_DIR` set and your scoped values present), the perimeter isn't applied to the LLM's shells. To fix: restart the LLM from a shell that has direnv hooked and the perimeter loaded, or wrap commands in `direnv exec . --` from now on.

@@ -55,3 +55,9 @@ Pick the lowest tier where the worst plausible outcome is acceptable. That's the
 | [`composition/`](composition/) | synthesis | all | Workshop (stacking all of the above) |
 
 More topics will appear here over time.
+
+## Platforms
+
+The runnable workshops in this track are implemented for Linux only. The Tier vocabulary and threat model are platform-agnostic, but maintaining parallel Mac and Windows ports doesn't pay for itself — the primitives differ enough that translation is the actual work.
+
+Each topic has an `OTHER-PLATFORMS.md` that names the equivalent primitives on Mac and Windows and flags the gotchas an LLM wouldn't infer from the Linux code (e.g., `sandbox-exec`'s allow-list semantics are inverse to bwrap's bind list; Docker Desktop on Mac/Windows is itself a Linux VM, so Tier 2 implicitly gives Tier 3). Mac and Windows participants: read `OTHER-PLATFORMS.md` for the topic you want, then ask your agent to translate `linux/` into your platform. The `discussion.md` files include a prompt scaffold for that.

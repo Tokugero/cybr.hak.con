@@ -35,6 +35,7 @@ What it doesn't buy: hypervisor isolation isn't free either. QEMU has had its ow
 - `cloud-localds` from the `cloud-utils` (or `cloud-image-utils`) package. Used to generate the cloud-init seed ISO.
 - ~600 MB of disk for the cached Ubuntu cloud image (one-time download).
 - An internet connection on first run, to download the image.
+- Mac and Windows participants: see `OTHER-PLATFORMS.md`.
 
 The cred-scrub probe and container-shape probe are reused — copied into the VM via `scp` and run there.
 
@@ -50,7 +51,7 @@ The cred-scrub probe and container-shape probe are reused — copied into the VM
 README.md                — this file
 workshop.md              — the exercise
 discussion.md            — questions to ask your LLM
-PORTING.md               — handoff doc for Mac (Lima/Apple Virtualization) and Windows (Hyper-V/WSL2)
+OTHER-PLATFORMS.md       — pointers for translating linux/ to Mac (Lima) or Windows (Windows Sandbox / Hyper-V)
 linux/
   launch-and-probe.sh    — boots a VM, runs probes via SSH, shuts down
   cleanup.sh             — tears down any leftover VM, removes cached overlay
@@ -58,4 +59,4 @@ linux/
   tests/run.sh           — runs the full lifecycle; opt-in via RUN_VM_HARNESS=1 because expensive
 ```
 
-WSL users follow the Linux folder. Mac and Windows aren't built — see `PORTING.md`.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.

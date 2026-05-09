@@ -38,3 +38,11 @@ Questions for your LLM after the workshop.
 - "Read about `firejail`. When would I use it instead of `bwrap`?"
 - "Linux's Landlock LSM is sometimes mentioned alongside bubblewrap. What does Landlock add, and is it worth using if bwrap is already in place?"
 - "What's `flatpak-spawn`? It's bwrap-adjacent but with a different threat model — explain."
+
+## Translating to your platform
+
+The workshop ships a Linux bwrap implementation. Mac and Windows participants: drive your agent through the port with these.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/bwrap-hardened.sh` into `mac/sandbox-hardened.sh` using `sandbox-exec`. Remember: sandbox-exec profiles are *allow-lists* — the inverse of bwrap's bind list. Show me the profile and walk me through what's allowed vs denied."
+- "I'm on Windows. Per `OTHER-PLATFORMS.md`, the practitioner answer is WSL 2 + the Linux folder. Argue both sides: when is that the right call, and when is it a cop-out that misses a real Windows-native need (AppContainer, Windows Sandbox)?"
+- "After your Mac port exists, compare the cred-scrub probe's output inside `bwrap-hardened` (Linux) vs inside `sandbox-hardened` (Mac). The threat goal is identical — block reads outside the workshop dir. Do the probe rows agree? If not, is the disagreement a Mac platform reality or a profile bug?"

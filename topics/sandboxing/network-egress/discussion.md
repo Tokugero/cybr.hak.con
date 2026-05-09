@@ -37,3 +37,11 @@ Questions for your LLM after the workshop.
 - "I want to use a Tor-based egress instead of a commercial VPN. What's the equivalent docker-compose pattern? What threat-model differences come with Tor?"
 - "Compare gluetun against a self-hosted WireGuard endpoint. Pros, cons, when each is the right call."
 - "What about an outbound proxy (squid, mitmproxy) instead of a VPN — different threat model, same shared-namespace trick. Sketch it."
+
+## Translating to your platform
+
+The workshop ships a Linux compose stack. Mac and Windows users running Docker Desktop: drive your agent through the port with these.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/run-baseline.sh` and `linux/run-via-sidecar.sh` into `<mac/*.sh | windows/*.ps1>`. The `Dockerfile`, `docker-compose.yml`, `.env.example`, and `egress-probe.sh` are platform-agnostic — copy them unchanged. Don't let the agent 'helpfully' edit them."
+- "Per `OTHER-PLATFORMS.md`, `/dev/net/tun` exists inside Docker Desktop's Linux VM, which is what makes gluetun work. Show me how you'd verify that on Mac without trusting the docs — what command exposes the device inside the worker?"
+- "After your port exists, run the no-credentials sidecar variant. Every probe row must read `fail`. If any row reads `ok` or anything else, what's the most likely cause — a leaked DNS, a residual route, or a Docker Desktop networking quirk?"

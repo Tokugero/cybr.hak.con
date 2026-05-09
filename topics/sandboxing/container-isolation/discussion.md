@@ -38,3 +38,11 @@ Questions to hand to your LLM after the workshop. Open-ended on purpose.
 
 - "Read `topics/sandboxing/README.md` for the tier framing. Sketch the composition story for `Tier 0 + Tier 2 + Tier 3` — Tier 0 hygiene + container + a VM around it. What does each layer add to the others?"
 - "Firecracker microVMs are sometimes called 'container-fast, VM-strong.' Where does that fit in the tier framework, and what's the practical difference for an agent workload?"
+
+## Translating to your platform
+
+The workshop ships a Linux Docker implementation. Mac and Windows users running Docker Desktop: drive your agent through the port with these.
+
+- "Read `OTHER-PLATFORMS.md`, then translate `linux/run-hardened.sh` into `<mac/run-hardened.sh | windows/run-hardened.ps1>`. Preserve every hardening flag (`--user`, `--read-only`, `--cap-drop=ALL`, `--security-opt=no-new-privileges`, network controls). For Windows, pick a fixed uid since `id -u` doesn't exist in PowerShell — explain your choice."
+- "What's the line-endings trap that bites only Windows users? Show me the `.gitattributes` or `git config` setting that prevents it for any bash script the workshop mounts into a container."
+- "On Mac/Windows the container is already inside a Linux VM (Docker Desktop). Does that change the *value* of `--cap-drop=ALL` and `--read-only`, or just the threat model around them? Argue both sides."

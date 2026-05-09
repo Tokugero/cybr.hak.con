@@ -28,11 +28,11 @@ Two reasons that matter for agent workflows:
 - **No daemon, no image.** No `docker pull`, no compose stack to manage, no socket to gate. `bwrap` is `fork → exec → done`. Spinning up an isolated process is essentially free.
 - **Explicit control.** With `bwrap` you choose every directory, every device, every capability. With Docker you accept the image's view and patch it with `-v`. For "wrap one command tightly" Tier 1 is faster to write and easier to audit.
 
-The trade-off: bwrap is Linux-specific (Mac and Windows have different process-isolation tools that aren't 1:1). For cross-platform agent workflows, Tier 2 stays more portable.
+The trade-off: bwrap is Linux-specific. Mac and Windows have different Tier 1 primitives that aren't 1:1; see `OTHER-PLATFORMS.md`. For cross-platform agent workflows, Tier 2 stays more portable.
 
 ## What you need
 
-- A Linux host (or WSL 2). Mac and Windows have analogous tools (`sandbox-exec` and AppContainer respectively); see `PORTING.md`.
+- A Linux host (or WSL 2). Mac and Windows participants: see `OTHER-PLATFORMS.md`.
 - `bubblewrap`. Install via your package manager:
   - Debian/Ubuntu: `apt install bubblewrap`
   - Arch: `pacman -S bubblewrap`
@@ -53,7 +53,7 @@ The probe script is the same `cred-scrub/linux/probe.sh` you used in earlier wor
 README.md              — this file
 workshop.md            — the exercise
 discussion.md          — questions to ask your LLM
-PORTING.md             — handoff doc for Mac (sandbox-exec) and Windows (AppContainer)
+OTHER-PLATFORMS.md     — pointers for translating linux/ to Mac (sandbox-exec) or Windows (AppContainer / WSL)
 linux/
   bwrap-permissive.sh  — bwrap with most things bound (deliberate weak example)
   bwrap-hardened.sh    — bwrap with minimal binds (the fair Tier 1 demo)
@@ -61,4 +61,4 @@ linux/
   tests/run.sh         — verifies hardened > permissive on filesystem reachability
 ```
 
-WSL users follow the Linux folder. Mac and Windows aren't built — see `PORTING.md`.
+WSL users follow the Linux folder. Mac and Windows participants: see `OTHER-PLATFORMS.md`.
