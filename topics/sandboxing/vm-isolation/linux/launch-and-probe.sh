@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# launch-and-probe.sh — boots a fresh Ubuntu VM, runs the cred-scrub +
+# launch-and-probe.sh — boots a fresh Debian VM, runs the cred-scrub +
 # container-shape probes inside it, shuts down.
 #
-# First run downloads ~600MB Ubuntu cloud image (cached at
+# First run downloads ~350MB Debian 12 generic-cloud image (cached at
 # ~/.cache/cybr-hak-con-vm/). Subsequent runs reuse the cached image.
 #
 # Uses KVM acceleration if /dev/kvm is readable; falls back to TCG
@@ -16,8 +16,8 @@ SANDBOXING_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CACHE_DIR="$HOME/.cache/cybr-hak-con-vm"
 mkdir -p "$CACHE_DIR"
 
-IMAGE_URL="https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
-IMAGE_PATH="$CACHE_DIR/ubuntu-24.04-server-cloudimg-amd64.img"
+IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+IMAGE_PATH="$CACHE_DIR/debian-12-genericcloud-amd64.qcow2"
 DISK_PATH="$CACHE_DIR/disk.qcow2"
 USERDATA_YAML="$CACHE_DIR/userdata.yaml"
 USERDATA_ISO="$CACHE_DIR/userdata.iso"
@@ -33,9 +33,9 @@ require() {
     exit 127
   fi
 }
-require qemu-system-x86_64 "Install qemu (apt install qemu-system-x86)"
-require qemu-img "Install qemu-utils"
-require cloud-localds "Install cloud-utils (apt install cloud-image-utils)"
+require qemu-system-x86_64 "Install qemu (Debian/Ubuntu: apt install qemu-system-x86; Arch: pacman -S qemu-base; NixOS: nix-shell -p qemu)"
+require qemu-img "Install qemu-utils (Debian/Ubuntu: apt install qemu-utils; NixOS: in same nix-shell as qemu)"
+require cloud-localds "Install cloud-utils (Debian/Ubuntu: apt install cloud-image-utils; Arch: pacman -S cloud-image-utils; NixOS: wrap this script with 'nix-shell -p cloud-utils --run \"bash $0\"')"
 require ssh "Install openssh-client"
 require scp "Install openssh-client"
 require ssh-keygen "Install openssh-client"
@@ -55,7 +55,7 @@ fi
 
 # ── Download image if needed ──
 if [ ! -f "$IMAGE_PATH" ]; then
-  echo "Downloading Ubuntu 24.04 cloud image (~600MB, one-time)..."
+  echo "Downloading Debian 12 generic-cloud image (~350MB, one-time)..."
   curl -fL --progress-bar "$IMAGE_URL" -o "$IMAGE_PATH.tmp"
   mv "$IMAGE_PATH.tmp" "$IMAGE_PATH"
   echo "Downloaded."
@@ -111,7 +111,6 @@ qemu-system-x86_64 \
   -drive file="$USERDATA_ISO",format=raw,if=virtio \
   -netdev user,id=net0,hostfwd=tcp::"$SSH_PORT"-:22 \
   -device virtio-net,netdev=net0 \
-  -nographic \
   -serial null \
   -monitor null \
   -display none \
@@ -122,7 +121,8 @@ qemu-system-x86_64 \
 echo "Waiting for SSH (this can take 30-90 seconds on first boot)..."
 SSH_OPTS=(-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
           -o ConnectTimeout=2 -o LogLevel=ERROR
-          -i "$SSH_KEY" -p "$SSH_PORT")
+          -o "Port=$SSH_PORT"
+          -i "$SSH_KEY")
 
 reachable=false
 for i in $(seq 1 90); do

@@ -6,7 +6,7 @@ Platform-specific notes for the Linux vm-isolation workshop.
 
 The script does seven things, in order:
 
-1. **Caches the Ubuntu cloud image.** First run downloads ~600 MB; cached at `~/.cache/cybr-hak-con-vm/`. Subsequent runs reuse it.
+1. **Caches the Debian 12 generic-cloud image.** First run downloads ~350 MB; cached at `~/.cache/cybr-hak-con-vm/`. Subsequent runs reuse it.
 2. **Generates an SSH keypair** at `~/.cache/cybr-hak-con-vm/ssh_key`. Reused across runs so `known_hosts` doesn't churn (we use `-o UserKnownHostsFile=/dev/null` to be safe anyway).
 3. **Builds a cloud-init NoCloud seed ISO.** Contains a `user-data` file that creates a user named `agent` with passwordless sudo and the SSH public key authorized. Cloud-init reads this on first boot.
 4. **Creates a qcow2 overlay** backed by the cached cloud image. The VM's writes go to the overlay, not the image. Wipe the overlay and you're back to a clean state.
@@ -43,7 +43,7 @@ If you want to extend the seed (install packages, add files, run scripts), edit 
 
 After running the workshop, your `~/.cache/cybr-hak-con-vm/` will contain:
 
-- The base image (~600 MB, kept across runs)
+- The base image (~350 MB, kept across runs)
 - The overlay disk (~50-200 MB, depends on what was written; refreshed each run)
 - The userdata seed ISO (~6 KB)
 - The SSH keypair (~1 KB)
@@ -55,7 +55,7 @@ After running the workshop, your `~/.cache/cybr-hak-con-vm/` will contain:
 
 - **`KVM_ARGS=()` and bash 4+.** The launch script uses bash arrays. If you're on an ancient bash 3 (e.g., default macOS bash), the array syntax will error. Mac users should use the platform-specific version (Lima-based) when it's built.
 - **`cloud-localds` not installed.** It's in `cloud-utils` (Debian/Ubuntu: `apt install cloud-image-utils`; Arch: `pacman -S cloud-image-utils`; NixOS: `nix shell nixpkgs#cloud-utils`). The script checks for it up front.
-- **Image download fails.** First run needs internet. The Ubuntu cloud-image mirror is reliable but if it's unreachable, retry or pre-fetch manually.
+- **Image download fails.** First run needs internet. The Debian cloud-image mirror (`cloud.debian.org`) is reliable but if it's unreachable, retry or pre-fetch manually with `curl -fLO <IMAGE_URL>` into `~/.cache/cybr-hak-con-vm/` before the workshop.
 - **SSH never becomes reachable.** Most often: cloud-init failed to apply the user-data, usually because the seed ISO is malformed. Inspect the VM by adding `-display gtk` to the qemu command and watching the boot.
 - **Overlapping ports.** If localhost:2222 is in use (another VM, a tunnel, etc.), edit `SSH_PORT=2222` near the top of the script.
 - **Stale qemu processes.** If a previous run died without cleanup, `bash cleanup.sh` clears them. The launch script also detects and kills stale processes from `qemu.pid`.

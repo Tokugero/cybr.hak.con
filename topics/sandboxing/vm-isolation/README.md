@@ -6,7 +6,7 @@ A workshop on Tier 3 sandboxing: running an AI coding agent inside a full virtua
 
 - What a VM isolates that a container doesn't (kernel, all of `/proc`, fully separate device model).
 - The cost of a VM (boot time, RAM, image size, complexity) and when it's worth paying.
-- How a minimal `qemu-system-x86_64` invocation with a cloud-init Ubuntu image gives you a disposable agent sandbox in ~30 seconds.
+- How a minimal `qemu-system-x86_64` invocation with a cloud-init Debian image gives you a disposable agent sandbox in ~30 seconds.
 - The composition story: VM around a hardened container = the strongest practical setup on Linux.
 - The implicit Tier 3 that Mac/Windows users get via Docker Desktop/WSL2 — which is its own teaching point.
 
@@ -22,7 +22,7 @@ For the full threat model and tier vocabulary, see `../README.md`.
 
 ## Why VMs are the cost-versus-value step
 
-Going from no isolation to Tier 0 hygiene costs almost nothing. Tier 0 → Tier 1/2 costs a few seconds per command and some setup complexity. **Tier 2 → Tier 3 costs roughly 30 seconds of boot time, a gigabyte of RAM, and 600 MB of disk.** That's a real step-change.
+Going from no isolation to Tier 0 hygiene costs almost nothing. Tier 0 → Tier 1/2 costs a few seconds per command and some setup complexity. **Tier 2 → Tier 3 costs roughly 30 seconds of boot time, a gigabyte of RAM, and ~350 MB of disk.** That's a real step-change.
 
 What you buy: kernel isolation. If your threat model includes "an attacker with a kernel CVE can escape my container," a VM is what you need.
 
@@ -33,16 +33,26 @@ What it doesn't buy: hypervisor isolation isn't free either. QEMU has had its ow
 - A Linux host with KVM available (`/dev/kvm` exists and is readable). Without KVM, qemu falls back to TCG software emulation, which works but is much slower (~3-5x boot time).
 - `qemu-system-x86_64`. Install via your package manager (`apt install qemu-system-x86`, `pacman -S qemu`, etc.).
 - `cloud-localds` from the `cloud-utils` (or `cloud-image-utils`) package. Used to generate the cloud-init seed ISO.
-- ~600 MB of disk for the cached Ubuntu cloud image (one-time download).
+- ~350 MB of disk for the cached Debian 12 generic-cloud image (one-time download).
 - An internet connection on first run, to download the image.
 - Mac and Windows participants: see `OTHER-PLATFORMS.md`.
 
 The cred-scrub probe and container-shape probe are reused — copied into the VM via `scp` and run there.
 
+## Recommended: prefetch the night before
+
+The image download is the only step that needs reliable internet. Run this from your hotel/home wifi the night before; the workshop step then runs offline.
+
+```sh
+bash topics/sandboxing/vm-isolation/linux/prefetch.sh
+```
+
+It downloads the Debian image, generates the SSH keypair, and builds the cloud-init seed ISO into `~/.cache/cybr-hak-con-vm/`. Idempotent — re-running is a no-op once the cache is warm. After this, `launch-and-probe.sh` boots without touching the network.
+
 ## Time
 
-- First run: ~3 minutes (image download + boot + probe + shutdown).
-- Subsequent runs: ~60-90 seconds (image cached).
+- With prefetch done: ~60-90 seconds total (boot + probe + shutdown).
+- Without prefetch, first run: ~3 minutes on fast wifi; longer on conference wifi.
 - Including reading the workshop and running the discussion prompts: ~75 minutes total.
 
 ## Layout
@@ -53,6 +63,7 @@ workshop.md              — the exercise
 discussion.md            — questions to ask your LLM
 OTHER-PLATFORMS.md       — pointers for translating linux/ to Mac (Lima) or Windows (Windows Sandbox / Hyper-V)
 linux/
+  prefetch.sh            — downloads image + keys + seed (run the night before)
   launch-and-probe.sh    — boots a VM, runs probes via SSH, shuts down
   cleanup.sh             — tears down any leftover VM, removes cached overlay
   notes.md               — Linux-specific notes (KVM, image cache, custom user-data)

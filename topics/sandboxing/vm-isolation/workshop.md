@@ -1,6 +1,6 @@
 # Workshop: VM isolation
 
-Hands-on. You'll boot a fresh Ubuntu VM, run the cred-scrub probe and container-shape probe inside it, observe the kernel difference, then shut it down. The whole cycle takes ~60-90 seconds after the first-run image download.
+Hands-on. You'll boot a fresh Debian 12 VM, run the cred-scrub probe and container-shape probe inside it, observe the kernel difference, then shut it down. The whole cycle takes ~60-90 seconds after the first-run image download.
 
 All paths below are under `linux/`. Mac and Windows participants: see `OTHER-PLATFORMS.md` for translation pointers.
 
@@ -17,9 +17,9 @@ That last point is the big practical difference from a container. Containers sha
 
 ## 2. The cost
 
-Real numbers for the Ubuntu cloud image used in this workshop:
+Real numbers for the Debian 12 generic-cloud image used in this workshop:
 
-- **Disk:** ~600 MB cached image, plus a per-VM overlay disk (typically <100 MB after install).
+- **Disk:** ~350 MB cached image, plus a per-VM overlay disk (typically <100 MB after install).
 - **RAM:** 1 GB allocated by default (the launch script's `-m 1G`). Can go lower for minimal workloads.
 - **Boot time:** ~30 seconds with KVM, ~2 minutes without (TCG software emulation).
 - **Setup complexity:** medium. Cloud-init handles the user provisioning, but you have to generate the seed ISO and orchestrate the SSH-after-boot pattern.
@@ -34,7 +34,7 @@ bash <repo>/topics/sandboxing/vm-isolation/linux/launch-and-probe.sh
 
 What this does, in order:
 
-1. **Caches the Ubuntu cloud image** at `~/.cache/cybr-hak-con-vm/` if not present. ~600 MB download on first run.
+1. **Caches the Debian 12 generic-cloud image** at `~/.cache/cybr-hak-con-vm/` if not present. ~350 MB download on first run.
 2. **Generates an SSH keypair** at `~/.cache/cybr-hak-con-vm/ssh_key` (cached for re-use).
 3. **Builds a cloud-init seed ISO** with the SSH public key, so the VM auto-creates an `agent` user with passwordless sudo and the public key authorized.
 4. **Creates a qcow2 overlay disk** on top of the cached cloud image — your changes don't touch the base.
@@ -100,7 +100,7 @@ A Linux user who wants the same defense has to build it explicitly — that's wh
 ## 7. Honest gaps
 
 - **Hypervisor escape CVEs.** QEMU and KVM have had their own vulnerabilities. The trust boundary moves to the hypervisor; it doesn't disappear.
-- **Image trust.** The Ubuntu cloud image is widely trusted. A random `someuser/sketchy.qcow2` is not.
+- **Image trust.** The Debian generic-cloud image is widely trusted (signed by Debian's release infrastructure; verifiable against `SHA512SUMS` published alongside it). A random `someuser/sketchy.qcow2` is not.
 - **Cloud-init exposure.** The seed ISO contains your SSH public key. Anyone who can read the cached files knows what key authorizes you to the agent VM. Not a credential leak (public key is meant to be public), but worth being aware of.
 - **VM persistence.** The overlay disk is kept cached unless you `cleanup.sh` it. If you boot, do work, then *don't* shut down cleanly, the overlay's state persists. Treat the overlay as ephemeral and rerun `cleanup.sh` between sessions.
 - **Network is fully reachable.** The default user-mode network gives the VM internet access via NAT. Combine with network-egress patterns (a VPN sidecar inside the VM, or VM-level routes that fail-closed) for the full network-axis story.

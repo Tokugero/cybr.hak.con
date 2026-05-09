@@ -28,10 +28,10 @@ Questions for your LLM after the workshop.
 
 ## Cloud-init and image hygiene
 
-- "What's actually in the Ubuntu 24.04 cloud image? How do I audit it? Walk me through verifying the SHA against canonical."
+- "What's actually in the Debian 12 generic-cloud image? How do I audit it? Walk me through verifying the SHA512 against `cloud.debian.org`'s `SHA512SUMS`."
 - "If a malicious actor controlled the cloud image's mirror, what could they do? How would I detect it?"
 - "I want to add specific packages to the VM at first boot. Walk me through extending the cloud-init user-data to do that."
-- "Could I use a smaller base image (Alpine, Debian minimal)? What changes about the workshop, and what's the cost?"
+- "Could I use a smaller base image (Alpine, or a Debian minimal/nocloud variant)? What changes about the workshop, and what's the cost? (Alpine specifically: the probes use bash-isms — what would break, and what's the minimum portability pass needed?)"
 
 ## Tier 3 on Mac/Windows
 
