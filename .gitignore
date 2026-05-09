@@ -1,5 +1,8 @@
 docs/
 
+# Validation artifacts from agent dry-runs of the workshops
+tmp/
+
 # Local Claude Code state — entrenched in the maintainer's environment,
 # not relevant to participants
 .claude/
