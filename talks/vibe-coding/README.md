@@ -6,30 +6,28 @@ Approver-facing summary for the vibe-coding talk. Title and executive summary ar
 
 **Primary:** *How to Vibe Code Without Holding Context*
 
-The primary keeps the speaker's framing and points at the resolution: the context exists, you just don't carry it. Reads as a how-to for a security-fluent crowd that wants practical patterns rather than evangelism.
+The primary keeps the reframe in the title: the project context exists, you just don't carry it. Reads as a how-to for a security-fluent crowd that wants concrete patterns rather than evangelism.
 
-**Alternate (drier):** *The Pattern That Builds Itself: AI Context Infrastructure for Real Projects*
+**Alternate (drier):** *Patterns for Shipping with AI: Layered Context, Validation Loops, Test Shapes, Parallel Build*
 
-The alternate names the recursion directly. More concept-forward; works if approvers want the title to match the security-conference register.
+The alternate names the four patterns directly. More concept-forward; works if approvers want the title to match the security-conference register.
 
 ## Executive summary
 
-Vibe coding fails on real projects because the agent runs out of context and the developer ends up holding the rest of the project in their head, which is the opposite of what vibe coding promised. The reframe of this talk is that you don't need a smarter agent; you need to pre-load the context the agent needs in a shape it can navigate, and ship that context as part of the project. The recursive insight is that the context infrastructure is itself a great vibe project, so each tool you build to make vibe coding work makes the next tool easier to build.
+Vibe coding fails on real projects because the developer ends up holding the whole project in their head, which is the opposite of what vibe coding promised. The reframe of this talk is that you don't need a smarter agent or more elaborate tooling; you need to apply four patterns that move the project's mental load out of your head and into the project itself, where the agent can read it. The talk is a personal share of how the speaker actually ships work using these patterns: layered context documents that shrink the input and sharpen the output, validation loops that confirm the agent's work without reading every line, testing shapes that signal what's actually broken instead of what merely changed, and project layouts that let multiple workstreams build in parallel without colliding.
 
-The talk walks five named pieces of context infrastructure: layered documentation written for the agent to read in a defined order, scoped agent definitions that constrain what each subagent owns, permission gates for destructive actions, a retrieval system for external knowledge, and a project template that bundles the pattern. Embeddings, vector stores, retrieval-augmented generation, and the Model Context Protocol are each defined from scratch when introduced; the talk assumes no AI vocabulary on the way in. Concrete examples of what to vibe next thread through every section, so the audience leaves with a recognition skill rather than a list of tools to copy.
+Embeddings, vector stores, retrieval-augmented generation, and the Model Context Protocol come up only as examples of small useful tools you can build using these patterns — they are not the content of the talk. For attendees who want a hands-on follow-up, an optional self-driven workshop walks through building one such tool (a dockerized RAG-backed MCP server) using exactly the patterns the talk describes, with the side effect of teaching what RAG and MCP actually are by having you build them. The workshop format is a folder of prompt files, one per step; participants explicitly invoke each prompt and choose how much of the work to drive themselves versus delegate to AI.
 
-The audience is the technically apt, security-fluent crowd at Cybr Hak Con, expected to be skeptical of agentic AI and unfamiliar with AI-specific terminology. The talk runs about fifty-five minutes inside a sixty-minute slot, leaves attendees with a single concrete first step (write `.abstract.md` and `.overview.md` for the project they're already in), and seeds further work without depending on it. The takeaway is the ability to recognize what context tool to build next given the friction in their current sessions.
+The audience is the technically apt, security-fluent crowd at Cybr Hak Con, expected to be skeptical of agentic AI hype and unfamiliar with AI-specific terminology. The talk runs about fifty-five minutes inside a sixty-minute slot, leaves attendees with a single concrete first step (write `.abstract.md` for a project they are already in), and seeds further work without depending on it. The takeaway is the recognition skill — knowing which pattern to apply given the friction in your current sessions — rather than a list of tools to copy.
 
 ## Contents (line-item)
 
-1. **Opening: the reframe** (5 min) — vibe coding fails because the agent runs out of context; pre-load it instead
-2. **Why vibe coding fails for real projects** (5 min) — hallucinated functions, wrong abstractions, repeated discovery cost
-3. **The shape of pre-loaded context** (4 min) — five pieces named: layered docs, scoped agents, permission gates, retrieval, template
-4. **Layered context documents** (8 min) — `.abstract.md`, `.overview.md`, source files; the discipline that keeps them current
-5. **Scoped agents and the orchestrator pattern** (8 min) — per-component instructions, role agents, three-phase planning
-6. **External knowledge: embeddings, vectors, RAG, MCP** (12 min) — audience-floor definitions, the four-part retrieval pattern
-7. **The pattern compounds — what to vibe next** (6 min) — recognizing which context tool to build next
-8. **What this doesn't fix** (3 min) — judgment, hallucination in unfamiliar libraries, ambiguous requirements
-9. **Closing: what to vibe first** (5 min) — single concrete first step, the recurring question
+1. **Opening: the reframe** (4 min) — vibe coding fails because the developer holds context the project should hold; pre-load it instead, in a shape the agent can navigate
+2. **Layered context documents** (10 min) — `.abstract.md` at the top, `.overview.md` below it, source as the deepest layer; the discipline that keeps the layers current as the project grows; why precision beats volume for the agent's input
+3. **Validation tools and steps** (10 min) — the feedback loop that lets you trust the agent's output without reading every line; what gets wired in (build, lint, type, test, custom checks); the gap between "code compiles" and "code is right"
+4. **Testing shapes and purpose** (10 min) — different test shapes for different signals; what AI workflows tend to over-test (mechanical changes) and under-test (interface contracts); how to compose shapes so the green build actually means something
+5. **Positioning a project to build in parallel** (10 min) — decomposing work so multiple workstreams (you and agents, or agents and agents) don't collide on shared state; how parallel-by-construction layouts compress the MVP timeline; the role of dedicated subagents (code-focused, SRE-focused) once shape is established
+6. **What this doesn't fix** (4 min) — judgment about what to build, hallucination in unfamiliar territory, ambiguous requirements, the human review gate
+7. **Closing: pick one to start with** (3 min) — single concrete first step (write `.abstract.md` for the project you're already in), and a pointer to the optional workshop for attendees who want to build a small tool that exercises all four patterns
 
-Total runs to fifty-six minutes including transitions; compressible to forty-five by trimming sections 5, 6, and 7.
+Total runs to fifty-one minutes including transitions; comfortably inside a sixty-minute slot. Compressible to forty-five by trimming the parallel-build section, which has the most material that lives in the optional workshop anyway.
