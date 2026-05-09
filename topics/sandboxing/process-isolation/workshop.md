@@ -57,6 +57,8 @@ Compare the probe output to steps 2 and 3:
 
 That's the fair Tier 1 demonstration. The agent process inside the sandbox literally cannot see your dotfiles because they aren't mounted into its namespace. That's a different defense than cred-scrub's "the env var isn't set" — this is "the file isn't reachable."
 
+> **If step 4 fails with `Operation not permitted` or `Permission denied`**, jump to `linux/notes.md` — the *Common gotchas* and *Debugging bwrap* sections cover the three most likely causes (user namespaces locked down by the kernel, setuid execution blocked because you're already inside another sandbox, and NixOS-style non-FHS path layouts). The single most useful diagnostic is `unshare -U sh -c true` — if that fails outside bwrap, your kernel doesn't allow what bwrap needs and no flag tweak will help. (Use `sh -c true` rather than `/bin/true` so the test works on NixOS and other non-FHS distros where `/bin/true` doesn't exist.)
+
 ## 5. Compose with Tier 0
 
 The natural composition: scrub the host shell with cred-scrub's `.envrc`, then bwrap the agent's command with the hardened binds. The shell scrub handles env vars; the bwrap handles filesystem reach.
@@ -88,4 +90,4 @@ The agent inside the bwrap inherits the scrubbed shell environment (because `bwr
 - "Compare `bwrap` against `firejail` — what does each do that the other doesn't?"
 - "What's a single `--share-*` or `--bind` flag that, if I forgot to remove it, would defeat most of the hardening?"
 
-The composition workshop (when it lands) walks through using cred-scrub + direnv-perimeter + container-isolation + network-egress + this together for one concrete scenario.
+The [`composition/`](../composition/) workshop walks through stacking cred-scrub + direnv-perimeter + this + container-isolation + network-egress for concrete scenarios, including a parameterized harness (`composition/linux/run-stacked.sh`) you can copy into your own workflow.

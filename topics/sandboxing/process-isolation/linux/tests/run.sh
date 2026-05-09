@@ -23,7 +23,7 @@ if ! command -v bwrap >/dev/null 2>&1; then
   exit 0
 fi
 
-if ! unshare -U /bin/true 2>/dev/null; then
+if ! unshare -U sh -c true 2>/dev/null; then
   echo "SKIP: user namespaces disabled on this kernel"
   exit 0
 fi
