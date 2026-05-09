@@ -132,6 +132,26 @@ The workshop's exercise: for any new setup you read or write, walk through the m
 - **The agent's own permission system is its own axis.** Claude Code's allowlist, MCP server scoping, the agent's tool definitions — none of these are in the matrix above because they're orthogonal to OS isolation. A well-scoped agent inside a leaky sandbox can be safer than a permissive agent inside a hardened one. Compose both.
 - **You're still trusting the human.** A poisoned `.envrc` you allowed, a Dockerfile you didn't read, a compose stack with `:latest` tags from an unverified registry — the trust gate is the human reviewing the setup. None of the compositions help against a human who skips that step.
 
-## 7. Where to next
+## 7. Take it home — the stacked harness
+
+The three runners above each demonstrate one composition cleanly, but they hardcode the cred-scrub probe as the workload. For real work, you want to point a composition at *your* directory and run *your* command. That's `linux/run-stacked.sh`:
+
+```sh
+# Default: Tier 0 (warned) + Tier 2 (hardened docker), cwd at /work, interactive bash
+bash linux/run-stacked.sh
+
+# Tier 0 + Tier 1 (bwrap), faster; Linux only
+bash linux/run-stacked.sh --tier bwrap
+
+# Point at an unfamiliar repo, drop into a hardened shell
+bash linux/run-stacked.sh --target ~/repos/sketchy-thing
+
+# One-shot command instead of a shell
+bash linux/run-stacked.sh --tier bwrap -- ls -la /work
+```
+
+What it composes: the same Tier 0 spot-check + Tier 1/2 hardening as the demo runners, but with the target directory and command parameterized. Read the source — it's short on purpose, and the comments explain the trade-offs at each flag. The right way to use it is **copy and adapt** for your specific workflow, not as a black box. If you find yourself wanting to bind-mount `~/.aws` or pass `--security-opt seccomp=unconfined` to make something work, that's the moment to stop and ask whether you've drifted from the threat model the composition was built for.
+
+## 8. Where to next
 
 `discussion.md` has prompts for thinking through specific compositions with your LLM, including writing one for your own scenario. The talk's matrix (tier × scenario) is built from the same kind of reasoning the matrix in §3 above demonstrates — populating that matrix is what the talk's central visual does.

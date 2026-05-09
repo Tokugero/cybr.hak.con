@@ -21,11 +21,11 @@ bash <repo>/topics/sandboxing/composition/linux/compose-docker-egress.sh
 
 If you run a composition from outside the perimeter, the inner sandbox layers still apply but the host shell isn't scrubbed — the agent's parent process has whatever your launching shell had. That's a meaningfully different threat profile from the matrix in `workshop.md`.
 
-## Why each runner just delegates
+## Why each demo runner just delegates
 
-The composition runners (`compose-bwrap.sh`, `compose-docker.sh`, `compose-docker-egress.sh`) are deliberately thin. Each prints the host's relevant Tier 0 state, then `exec`s into the underlying topic's runner. The composition workshop doesn't introduce new mechanism; it shows you how to read and stack what's already there.
+The three demo runners (`compose-bwrap.sh`, `compose-docker.sh`, `compose-docker-egress.sh`) are deliberately thin. Each prints the host's relevant Tier 0 state, then `exec`s into the underlying topic's runner against the cred-scrub probe. They're for *seeing* what each composition does to a known workload.
 
-If you want a more "interesting" composed runner — one that, say, takes a target directory and an agent command as arguments and wraps them in the right composition for a chosen scenario — that's a useful exercise to write yourself, with your LLM, after working through the discussion prompts.
+For real work, see `run-stacked.sh` in the same directory: it takes a `--target` directory and an optional `-- command` and applies the Tier 0 check plus your chosen Tier 1 or Tier 2 hardening. It's parameterized, ~150 lines, and meant to be copied and adapted rather than used as a black box. The exercise after working through `discussion.md` is to fork it for your own workflow — change defaults, add the egress sidecar, drop in a target-directory-specific allowlist.
 
 ## How `bwrap` and Docker compositions differ in practice
 
