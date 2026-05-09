@@ -76,6 +76,7 @@ Same image, but with a list of hardening flags:
 - `--tmpfs /tmp` — give the container a writable `/tmp` (some tools need it).
 - `--cap-drop=ALL` — drop every Linux capability.
 - `--security-opt=no-new-privileges` — prevent setuid escalation.
+- *(implicit)* **Docker's default seccomp profile applies.** You didn't add a flag for it because it's on by default. About 44 syscalls — `kexec_load`, `init_module`/`finit_module`, `mount`/`umount2`, `name_to_handle_at`, several `ptrace` edges, parts of `setns` and `unshare` — are blocked from this container. That's a meaningful narrowing of the kernel attack surface. You'd need to add a flag (`--security-opt seccomp=unconfined`) to **turn it off**. See section 5 below for why that's worth knowing.
 
 Compare against step 3:
 
@@ -114,15 +115,18 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock ...
 
 # Wrong: --network=host — undoes the network isolation
 docker run --network=host ...
+
+# Wrong: --security-opt seccomp=unconfined — undoes the syscall filter
+docker run --security-opt seccomp=unconfined ...
 ```
 
-Each of these patterns shows up in real-world `docker run` invocations because they make some convenience work. They also each undo a major part of what Tier 2 was supposed to do. If you see them in an `.envrc` or runner script you didn't write, ask why.
+Each of these patterns shows up in real-world `docker run` invocations because they make some convenience work. They also each undo a major part of what Tier 2 was supposed to do. The `seccomp=unconfined` one is especially worth flagging because the protection it disables is *invisible by default* — there's no flag in your hardened command that turns seccomp on, so participants don't realize one flag silently turns it off. Common reasons people add it: older `gdb` against a containerized process, certain kernel-debugging tools, some Java agents that use `perf_event_open`. Almost no agent workload legitimately needs it. If you see it in an `.envrc` or runner script you didn't write, ask why.
 
 ## 6. Honest gaps
 
 What containers — even hardened ones — don't address:
 
-- **Kernel attack surface.** Containers share the kernel with the host (or with the VM, on Mac/Windows). A kernel CVE that escapes namespaces is a container escape. If your threat model includes kernel-level attackers, you want Tier 3.
+- **Kernel attack surface.** Containers share the kernel with the host (or with the VM, on Mac/Windows). A kernel CVE that escapes namespaces is a container escape. The default seccomp profile narrows that surface — the most common privilege-escalation syscalls are blocked — but it doesn't eliminate it. A CVE in a syscall the default profile *allows* (most of them) is still reachable. If your threat model includes kernel-level attackers, you want Tier 3.
 - **Docker socket access.** Anything that can talk to `/var/run/docker.sock` can launch privileged containers and effectively own the host. Never mount this socket into a container the agent runs in. Some "developer convenience" tooling does this without warning; verify before allowing.
 - **Bind-mounted volumes.** Whatever you `-v` in is reachable. The container's "isolation" only covers what's NOT mounted.
 - **GUI passthrough.** If you mount Wayland or X11 sockets to make GUI tools work inside the container, your "container" can keylog, screenshot, and inject input across that boundary. (See the survey doc's claucker breakdown for a real-world example of this trade-off.)
