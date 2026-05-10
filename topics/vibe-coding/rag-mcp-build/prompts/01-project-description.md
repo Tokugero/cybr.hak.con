@@ -29,7 +29,7 @@ Ask the participant these questions, **one at a time**, and wait for each answer
 
 1. **What problem does this project solve, in one sentence?** For the workshop's reference build, the answer is something like *"Make HackTricks searchable by an LLM agent so it can look up techniques without re-reading every page."* The participant may pick a different scope; honour their answer.
 2. **Who will use it, and in what context?** Themselves working through a security task? A team's MCP-aware tooling? An automated CI workflow? The answer shapes what "useful" means for this build.
-3. **What does the smallest useful version look like?** Not the full feature set — the smallest version that does anything useful. For the workshop's reference, that's *"ingest HackTricks once, expose a search endpoint that returns relevant chunks."* Participants on a different scope answer for themselves.
+3. **What does the smallest useful version look like?** Not the full feature set — the smallest version that does anything useful. For the workshop's reference build, the smallest useful version has **two co-equal pieces**: (a) an ingestion pipeline that gets the source into a vector store, and (b) a search interface that queries it. Either piece broken makes the tool useless. Frame the answer so both pieces are visible, not one as a sub-feature of the other. Participants on a different scope answer for themselves but should still name their deliverables as peers.
 
 If any answer is vague (e.g. "I want it to be fast and easy"), push back gently — ask for one specific concrete example. The L0 file is going to be ~100 tokens; vague inputs produce vague summaries that don't help the next session.
 

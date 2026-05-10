@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "hacktricks-rag": {
+      "command": "/home/tokugero/.local/bin/uv",
+      "args": [
+        "run",
+        "--directory", "/home/tokugero/repos/github/tokugero/cybr.hak.con/topics/vibe-coding/rag-mcp-build",
+        "python", "-m", "mcp_server"
+      ],
+      "env": {
+        "QDRANT_URL": "http://localhost:6333",
+        "OLLAMA_URL": "http://localhost:11434",
+        "QDRANT_COLLECTION": "hacktricks",
+        "EMBED_MODEL": "nomic-embed-text",
+        "LD_LIBRARY_PATH": "/nix/store/ihpdbhy4rfxaixiamyb588zfc3vj19al-gcc-15.2.0-lib/lib"
+      }
+    }
+  }
+}

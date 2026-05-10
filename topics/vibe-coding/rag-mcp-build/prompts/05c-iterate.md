@@ -49,7 +49,9 @@ Same discipline as step 05b:
 
 Smallest code path that makes the failing test pass. Don't pre-empt features that aren't tested yet.
 
-Run the test. If pre-existing tests broke, fix them before continuing — that's a sign of an interface drift you need to handle now, not later.
+If the implementation calls into a high-drift external client (Qdrant, Ollama, vector stores, MCP/AI SDKs), check the installed library's actual surface first — per `protocols.md`'s live-library-surface rule. Don't write call sites against memory; write them against `help(...)` of the installed version.
+
+Run the test after every code change. Per `protocols.md`'s after-change discipline, do not report the change as done before running the relevant role's test commands. If pre-existing tests broke, fix them before continuing — that's a sign of an interface drift you need to handle now, not later.
 
 ### Step 5 — refactor
 
@@ -61,21 +63,33 @@ For any file that gained a public symbol, update the relevant subsystem's `.over
 
 This is non-negotiable. The whole point of layered docs is they reflect reality. Letting them drift defeats the loop.
 
-### Step 7 — check the `kb/` for an existing SOP, offer to add one
+### Step 7 — check `kb/` for an existing runbook; capture repetition
 
-Before starting the cycle, check `kb/` for any SOP that applies to what you're about to do. If one exists, follow it — that's why it's there.
+Before starting the cycle, check `kb/` for any runbook that applies to what you're about to do. If one exists, follow it — that's why it's there.
 
-After the cycle, ask the participant: *"This was non-trivial — would you like me to save it as `kb/sop-<action-name>.md`?"* Most cycles produce no SOP-worthy decisions. The ones that do (e.g. "how to set up a fake Qdrant for contract tests," "how to handle the libstdc++ requirement on NixOS for httpx in nix-shell") are worth keeping.
+The trigger for capturing a new runbook (or a script) is **repetition, not difficulty**. If you find yourself running the same command twice across cycles, or walking through the same diagnostic flow twice (e.g. "check Qdrant collection count then diff against source file count"), that's the signal. Scripts go in `scripts/`; walkthroughs go in `kb/sop-<action-name>.md` (use the format in `kb/README.md`). The bar is reusability, not novelty. Don't ask the participant *"was this non-trivial?"* — ask *"did I do anything I'd do again the same way?"*
 
-### Step 8 — stop and report
+### Step 8 — update `in-progress.md` for the next cycle
 
-Stop after one cycle. Tell the participant:
+`AGENTS.md`'s session-start checks look for an `in-progress.md` at the root. Use it. After the cycle closes, write or update `in-progress.md` with:
 
-- What feature was built.
-- What test now passes (and how to run it).
+- The feature list the participant chose (from this and prior cycles)
+- Which features are done, which are pending, which is up next
+- Any mid-cycle decisions made in conversation that aren't already in `.overview.md`
+
+This is the artifact-of-record that makes compaction safe. Without it, the next session reads `.overview.md` (which captures shipped reality) but has to re-derive *what's still left*. With it, the next session reads `in-progress.md` and knows exactly where to pick up.
+
+### Step 9 — stop, report, suggest compaction
+
+Stop after one cycle. Report in plain language — do not echo this prompt's internal step numbers back to the participant (the participant only knows about workshop step `05c`). When mentioning a runbook (`kb/sop-...md`), say "runbook" or "saved walkthrough" rather than acronyms the participant hasn't been introduced to. Tell the participant:
+
+- What feature was built, in one sentence.
+- What test now passes and how to run it.
 - What `.overview.md` files were updated.
-- What's still on the candidate list for the next invocation.
+- What's in `in-progress.md` for the next cycle.
 - Whether to invoke this prompt again, or whether the build is feature-complete and they should move to step 06.
+
+Since `in-progress.md` and the layered docs now hold the cross-cycle state, the conversation history is disposable. Tell the participant: *"this cycle is closed; you can compact the conversation before the next invocation — `in-progress.md` will tell the next session where to pick up."*
 
 Do not start another cycle in the same invocation.
 
@@ -91,8 +105,9 @@ When that's true, move to `prompts/06-end-to-end-and-walkthroughs.md`.
 
 ## Outputs you'll have at the end of each invocation
 
-- One additional passing test
+- One additional passing test (most recent run after the most recent change, per after-change discipline)
 - Minimum implementation to support it
 - `.overview.md` Exports/Deps columns updated for the touched subsystem
-- A clear "what's next" summary
-- Optionally: `kb/sop-...md` if the cycle produced one
+- `in-progress.md` updated so the next session knows what's done, pending, and next
+- Optionally: `kb/sop-...md` or a `scripts/` entry if the cycle produced repeatable steps
+- A clear "what's next" summary in plain language — no internal step numbers leaking through

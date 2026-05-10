@@ -87,6 +87,16 @@ The interfaces get debated here, not later. Press the participant on:
 
 Iterate until the participant agrees on the full interface surface.
 
+Before moving to step 2, force three specific design decisions that crash builds when left implicit:
+
+**Return shape of the search response.** Naive chunk text forces the calling LLM agent to load whole source documents to recover structure. A structured response (e.g. `tool`, `usage`, `options`, `install`, `source_path`) lets the agent act on the result directly. Ask: *"what fields belong in the response so the calling agent can use the result without re-loading the source?"* Capture the chosen shape in `SearchResult` (or the response DTO equivalent).
+
+**Chunker behaviour when a unit exceeds chunk_size.** Real source content has code blocks, command output dumps, and tables that are larger than typical prose paragraphs. The chunker must have an explicit cascade — for the reference build: section (markdown heading) → paragraph → line → hard size cut. The cascade is the guarantee that no input shape crashes ingestion. Ask: *"what does the chunker do when a paragraph is bigger than chunk_size? When a line is bigger than chunk_size?"* If the participant only describes paragraph splitting, push back — ingestion against real source will crash on the first oversized paragraph.
+
+**Resumability and completeness contract on the vector store.** Per the commitment from step 02. The store interface must expose at least `has_source(source) -> bool` (so the pipeline can skip already-ingested sources) and `list_sources() -> set[str]` (so a completion check can compare processed vs indexed). The ingest pipeline returns enough state to run that check at end-of-run. Ask: *"what's the public surface on the store that lets the pipeline resume after a crash and verify it actually finished?"*
+
+For high-drift external clients (Qdrant client, Ollama client), per `protocols.md`'s live-library-surface rule, run a quick `help(...)` or `dir(...)` check against the installed version before writing call sites. Write against what's there, not what memory suggests.
+
 ### Step 2 — write skeleton modules
 
 Once the interfaces are agreed, write skeleton files. Each method body is `raise NotImplementedError` or returns a sensible default; the *signature* is what matters at this stage. Imports, type annotations, ABCs, Pydantic models are all real.

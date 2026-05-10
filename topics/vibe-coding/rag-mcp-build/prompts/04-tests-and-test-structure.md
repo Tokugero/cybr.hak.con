@@ -23,9 +23,10 @@ Read `AGENTS.md`, the root `.overview.md`, and each subsystem's `.overview.md` f
 
 Ask, one at a time:
 
-1. **What's the unit-vs-integration mix you want?** For the reference build: *"unit tests with mocks for the embedder and the vector store; one or two contract tests using an in-memory fake Qdrant; integration tests that exercise the chunker → embedder → store path with mocks at the external boundary; end-to-end is wired in step 06 with real services in docker-compose."* Honour the participant's answer.
+1. **What's the unit-vs-integration mix you want?** For the reference build: *"unit tests with mocks for the embedder and the vector store; at least one contract test that hits the real installed external client (not a mock), because the agent's training-data memory of high-drift libraries is older than the installed version; integration tests that exercise the chunker → embedder → store path with mocks at the external boundary; end-to-end is wired in step 06 with real services in docker-compose."* Honour the participant's answer.
 2. **What's the test runner?** For Python with uv: pytest. For other stacks, ask.
-3. **What shared fixtures will the subsystems need?** For the reference: *"a fake embedder that returns deterministic vectors, a fake vector store that holds documents in memory, sample chunks of HackTricks-shaped markdown."* Different scopes need different fixtures.
+3. **What shared fixtures will the subsystems need?** For the reference: *"a fake embedder that returns deterministic vectors, a fake vector store that holds documents in memory, sample chunks of HackTricks-shaped markdown — including at least one fixture with an oversized paragraph (longer than chunk_size) so the chunker's cascade is actually exercised. Polite prose fixtures pass the happy path and ship a crash on real input."* Different scopes need different fixtures.
+4. **What's the version-drift defense for external clients?** High-drift clients (Qdrant client, Ollama client, vector-store SDKs) change shape often. The unit suite mocks can pass while real calls fail. Ask: *"which external clients deserve a contract test that hits the real installed library, even at the cost of needing a fake or container in the test environment?"* For the reference build, Qdrant gets a real contract test against an in-memory fake or a throwaway containerised instance.
 
 ### Step 2 — propose the test layout
 

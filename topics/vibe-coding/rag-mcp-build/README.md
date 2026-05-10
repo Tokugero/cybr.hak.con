@@ -55,10 +55,21 @@ You also don't run prompts in your AI tool's "auto" or "yolo" mode. Each prompt 
 
 After 06, the workshop has a follow-up section at the bottom of the README on **wiring the MCP server into your assistant** — a tool-specific final step (Claude Code: `.mcp.json`; OpenCode: `opencode.json`; Cursor / Codex / other: direct HTTP).
 
+## The `reference/` directory
+
+`reference/` contains a complete, end-to-end vibe-coded version of this build — the layered docs, role descriptions, `protocols.md`, the library and MCP subsystems, tests, `docker-compose.yml`, and the walkthrough. It's a frozen snapshot from a real workshop run, kept so you (or your assistant) can browse what a finished project looks like under these patterns.
+
+Two ways to use it:
+
+- **As a participant — after you build.** Compare your `.abstract.md` / `.overview.md` shape and your subsystem split against the reference once you've done your own pass. Don't peek before — the workshop's value is in the building.
+- **As an assistant — at any time.** If you're the LLM helping a participant and you're unsure what a particular artifact should look like (e.g. "what does a well-shaped `.overview.md` Exports column look like?", "how is the chunker cascade structured?", "how does the ingest pipeline expose resumability?"), read the corresponding file under `reference/`. Treat it as a worked example, not a template to copy — the participant's project may have different subsystems, stack, or scope, and slavish copying defeats the pattern.
+
+The reference is intentionally imperfect in a few spots (it shipped some of the issues this workshop's prompts now guard against — e.g. host-side Ollama in the original `docs/walkthrough.md`, a partial first ingest). Those imperfections are themselves instructive: this is what a real vibe-coded project looks like, warts included, not an idealised cleanroom.
+
 ## When you're stuck
 
-- The `reference/` directory contains a finished version of this build for comparison after you've done it yourself. Don't peek before — the workshop's value is the building.
 - If a prompt seems wrong on your project (different scope, different language preference), tell your assistant *what* you'd change and *why*. The assistant should help you adapt the prompt while preserving the pattern it's exercising.
+- If you can't tell whether your output is on-track, point your assistant at the corresponding file in `reference/` and ask it to compare shape (not contents).
 
 ## Tool-specific final step — wiring the MCP server
 

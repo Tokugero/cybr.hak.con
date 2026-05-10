@@ -112,6 +112,21 @@ Operational protocols for any agent working in this repository.
 - <participant fills in: indentation, naming conventions, dependency policy>
 - Specific dependency versions — never floating/latest.
 
+## After-change discipline
+- After any code change, run the relevant role's test commands (per `AGENTS.md`) before reporting the change as done. If a runtime path isn't covered by tests, say so explicitly instead of leaving it silently unverified.
+- "Tests passed earlier in the session" does not count. The most recent run after the most recent change is what counts.
+
+## External dependencies — explicit lookups, paired client/server
+- Before pinning any external dependency (Docker image tag, Python package version, etc.), run an explicit lookup of current stable. Do not pin from memory. Commands the assistant should show its work for: `docker manifest inspect <image>:latest`, `uv pip index versions <pkg>`, registry tag queries.
+- For paired client/server stacks (Qdrant client ↔ Qdrant server, Ollama Python client ↔ Ollama server, etc.), pin both to compatible versions in the same lookup pass. Never one from memory and the other from a lookup.
+- Record each pin in the relevant `.overview.md` Deps column with a one-line "as of <date>, current stable was X; client/server matched" note.
+
+## Live-library surface check
+- The assistant's training data is older than the installed library. Before writing code against any high-drift client (Qdrant client, Ollama client, vector-store SDKs, MCP/AI SDKs), check the installed library's actual surface (e.g. `uv run python -c "import qdrant_client; help(qdrant_client.AsyncQdrantClient.query_points)"`) and write against what's there, not what memory suggests.
+
+## Capture repetition
+- If the assistant runs the same command twice, or walks through the same diagnostic flow twice, that's the trigger to capture it. Scripts go in `scripts/`; walkthroughs go in `kb/sop-<name>.md`. The threshold is repetition, not difficulty.
+
 ## Permission gates — always ask before
 1. Writing or modifying any secret or credential file.
 2. Applying changes to a production system.
@@ -120,6 +135,10 @@ Operational protocols for any agent working in this repository.
 5. Deleting git history or running `git push --force`.
 
 Each gate requires a fresh ask, even if a similar action was approved earlier in the session.
+
+## Reporting to the participant
+- Use plain language. Don't echo internal prompt-step numbers (the participant only knows about workshop step IDs like `05c`).
+- First use of any term-of-art (SOP, runbook, contract test, fixture) needs a one-clause gloss; prefer the plainer word and use it consistently.
 
 ## Dev shell
 <participant fills in: direnv + Nix, Python virtualenv via uv, etc.>
@@ -190,7 +209,11 @@ For the stub files (subsystem `.abstract.md` and `.overview.md`, `docs/sre-todos
 
 If the participant said yes in step 1 to materialising subagents in their tool's format, offer to create `.claude/agents/*.md` (Claude Code), `.opencode/agents/*.md` (OpenCode), or `.cursor/rules/*.mdc` (Cursor) files derived from the role descriptions in `AGENTS.md`. Otherwise skip this step — the role descriptions in `AGENTS.md` are sufficient.
 
-### Step 6 — stop
+### Step 6 — before closing, confirm artifacts hold every decision
+
+Step boundaries are compaction points. Before telling the participant step 03 is done, confirm that every decision discussed in this session lives in a file the next session will read — not just in conversation history. If a choice was made in chat but isn't in `AGENTS.md`, `protocols.md`, or a subsystem `.overview.md`, write it down now. Tell the participant: *"step 03 is closed; you can compact the conversation before invoking step 04 — every decision we made is on disk."*
+
+### Step 7 — stop
 
 Do not proceed to step 04. Wait for the participant to invoke `prompts/04-tests-and-test-structure.md`.
 
@@ -198,7 +221,7 @@ Do not proceed to step 04. Wait for the participant to invoke `prompts/04-tests-
 
 - `AGENTS.md` describing the project's three role patterns
 - `CLAUDE.md` with `@AGENTS.md` for Claude Code users (skip if not on Claude Code)
-- `protocols.md` with secrets handling, code style, the five permission gates, dev shell setup
+- `protocols.md` covering: secrets handling, code style, after-change discipline, external-dependency lookups + paired client/server pinning, live-library surface check, repetition-capture rule, the five permission gates, reporting guidance, dev shell setup
 - `kb/README.md` (empty index), `docs/sre-todos.md` (empty stub), `docs/session-log.md` (empty stub)
 - Per-subsystem `.abstract.md` and `.overview.md` stubs
 - `.gitignore` augmented for the operational files

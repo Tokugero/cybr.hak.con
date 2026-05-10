@@ -68,7 +68,7 @@ Run the test again. Confirm green:
 cd <library>/ && uv run pytest tests/test_search.py::<test_name> -v
 ```
 
-If any pre-existing test broke, fix it before continuing.
+Per `protocols.md`'s after-change discipline: do not report this change as done before running the test. "Code looks right" is not the same as "tests pass." If any pre-existing test broke, fix it before continuing.
 
 ### Step 5 — refactor
 
@@ -85,11 +85,11 @@ If there's nothing to refactor, say so explicitly and skip — refactor-for-the-
 
 If the implementation changed any public signature from what step 05a captured, update the Exports column in the relevant `.overview.md`. This is the living-docs discipline in action — the doc reflects current reality, not what you wrote two steps ago.
 
-### Step 7 — offer an SOP
+### Step 7 — capture if anything will recur
 
-If the work involved any non-obvious decision (a quirky behaviour of the test fixture, a workaround for a library version, etc.), ask the participant: *"This had a non-trivial decision in it — would you like me to save it as `kb/sop-<action-name>.md` so the next session doesn't have to re-derive it?"* If yes, write the SOP using the format in `kb/README.md`.
+Per `protocols.md`'s capture-repetition rule: if any command or diagnostic flow in this cycle is something you'd do again the same way, save it. Scripts go in `scripts/`; walkthroughs go in `kb/sop-<action-name>.md` using the format in `kb/README.md`. The bar is reusability, not novelty.
 
-Most first cycles produce no SOP-worthy decisions. That's fine.
+First cycles often produce nothing worth saving. That's fine — just confirm the question was asked, not skipped.
 
 ### Step 8 — stop
 

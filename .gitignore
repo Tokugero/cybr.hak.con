@@ -1,4 +1,6 @@
-docs/
+# Maintainer's working notebook at the repo root; anchored so that workshop
+# deliverables under topics/**/reference/docs/ remain tracked.
+/docs/
 
 # Validation artifacts from agent dry-runs of the workshops
 tmp/

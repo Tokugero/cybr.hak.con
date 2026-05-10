@@ -1,0 +1,26 @@
+[project]
+name = "rag-lib"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+  "pydantic>=2.9,<3",
+  "httpx>=0.27,<1",
+  "qdrant-client>=1.9,<2",
+]
+
+[build-system]
+requires = ["hatchling>=1.25,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lib"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-asyncio>=0.24,<1",
+]
